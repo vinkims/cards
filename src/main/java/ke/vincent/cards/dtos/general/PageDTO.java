@@ -28,7 +28,7 @@ public class PageDTO {
         this.setPageSize(Integer.valueOf((String) params.getOrDefault("pgSize", "10")));
         this.setSearch((String) params.getOrDefault("q", null));
         this.setSortDirection((String) params.getOrDefault("sortDirection", "desc"));
-        this.setSortVal((String) params.getOrDefault("sortValue", "createdOn"));
+        this.setSortVal((String) params.getOrDefault("sortValue", "dateCreated"));
         this.setDirection();
     }
 
