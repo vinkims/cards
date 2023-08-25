@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import ke.vincent.cards.dtos.general.PageDTO;
 import ke.vincent.cards.dtos.user.UserDTO;
 import ke.vincent.cards.exceptions.NotFoundException;
+import ke.vincent.cards.models.ERole;
 import ke.vincent.cards.models.EUser;
 import ke.vincent.cards.repositories.UserDAO;
 import ke.vincent.cards.services.role.IRole;
@@ -22,6 +24,9 @@ import ke.vincent.cards.specifications.SpecFactory;
 
 @Service
 public class SUser implements IUser {
+
+    @Value(value = "${default.value.role.member-id}")
+    private Integer memberRoleId;
 
     @Autowired
     private UserDAO userDAO;
@@ -33,6 +38,11 @@ public class SUser implements IUser {
     private IRole sRole;
 
     @Override
+    public Boolean checkExistsByEmail(String email) {
+        return userDAO.existsByEmail(email);
+    }
+
+    @Override
     public EUser create(UserDTO userDTO) {
 
         EUser user = new EUser();
@@ -41,10 +51,16 @@ public class SUser implements IUser {
         user.setDateCreated(LocalDateTime.now());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
-        user.setRole(sRole.getById(userDTO.getRoleId(), true));
+        Integer roleId = userDTO.getRoleId() == null ? memberRoleId : userDTO.getRoleId();
+        setRole(user, roleId);
 
         save(user);
         return user;
+    }
+
+    @Override
+    public Optional<EUser> getByEmail(String email) {
+        return userDAO.findByEmail(email);
     }
 
     @Override
@@ -81,6 +97,11 @@ public class SUser implements IUser {
     @Override
     public void save(EUser user) {
         userDAO.save(user);
+    }
+
+    public void setRole(EUser user, Integer roleId) {
+        ERole role = sRole.getById(roleId, true);
+        user.setRole(role);
     }
     
 }

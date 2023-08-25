@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ke.vincent.cards.dtos.user.UserDTO;
 import ke.vincent.cards.models.ECard;
 import lombok.Data;
@@ -12,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(value = Include.NON_NULL)
 public class CardDTO {
     
     private Integer id;
