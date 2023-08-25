@@ -11,7 +11,11 @@ import ke.vincent.cards.models.EUser;
 
 public interface IUser {
     
+    Boolean checkExistsByEmail(String email);
+    
     EUser create(UserDTO userDTO);
+
+    Optional<EUser> getByEmail(String email);
 
     Optional<EUser> getById(Integer userId);
 

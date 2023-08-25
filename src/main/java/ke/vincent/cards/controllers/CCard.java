@@ -25,8 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ke.vincent.cards.dtos.card.CardDTO;
 import ke.vincent.cards.dtos.general.PageDTO;
 import ke.vincent.cards.models.ECard;
+import ke.vincent.cards.models.EUser;
 import ke.vincent.cards.responses.SuccessPaginatedResponse;
 import ke.vincent.cards.responses.SuccessResponse;
+import ke.vincent.cards.services.auth.IUserDetails;
 import ke.vincent.cards.services.card.ICard;
 
 @RestController
@@ -35,9 +37,15 @@ public class CCard {
     @Autowired
     private ICard sCard;
 
+    @Autowired
+    private IUserDetails sUserDetails;
+
     @PostMapping(path = "/card", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuccessResponse> createCard(@Valid @RequestBody CardDTO cardDTO) throws URISyntaxException {
 
+        EUser user = sUserDetails.getActiveUserByContact();
+        cardDTO.setUserId(user.getId());
+        
         ECard card = sCard.create(cardDTO);
 
         return ResponseEntity

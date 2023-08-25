@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ke.vincent.cards.annotations.IsEmailValid;
 import ke.vincent.cards.models.EUser;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class UserDTO {
 
     private LocalDateTime dateCreated;
 
+    @IsEmailValid
     private String email;
 
     private String password;
