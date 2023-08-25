@@ -23,7 +23,8 @@ public class DateParamDTO {
 
     private LocalDateTime startDate;
 
-    public DateParamDTO(Map<String, String> dateParams) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+    public DateParamDTO(Map<String, String> dateParams) throws IllegalArgumentException, 
+            IllegalAccessException, NoSuchFieldException, SecurityException {
 
         String endDateStr = dateParams.getOrDefault("endDate", null);
         String startDateStr = dateParams.getOrDefault("startDate", null);
@@ -32,7 +33,8 @@ public class DateParamDTO {
             setDateField(startDateStr, this.getClass().getDeclaredField("startDate"));
             setDateField(endDateStr, this.getClass().getDeclaredField("endDate"));
             if (startDate.isAfter(endDate)) {
-                throw new InvalidInputException("invalid date reange provided. startDate should be before endDate", "startDate/endDate");
+                throw new InvalidInputException("invalid date reange provided. startDate should be before endDate", 
+                    "startDate/endDate");
             }
         } else {
             setEndDate(LocalDateTime.now());
@@ -55,7 +57,7 @@ public class DateParamDTO {
      * @param dateStr
      * @return
      */
-    private LocalDateTime stringToDate(String dateStr) {
+    private LocalDateTime stringToDate(String dateStr) throws ParseException {
         return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm"));
     }
 }
