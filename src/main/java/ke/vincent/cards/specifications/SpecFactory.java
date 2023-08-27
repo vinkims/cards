@@ -23,9 +23,9 @@ public class SpecFactory {
             Matcher matcher = pattern.matcher(searchStr);
             while(matcher.find()) {
                 String key = matcher.group("key");
-                Object value = matcher.group("searchStr");
+                Object value = matcher.group("value");
 
-                if (value == null || (key.split("\\.").length > 1 && !allowedFields.contains("key"))) {
+                if (value == null || (key.split("\\.").length > 1 && !allowedFields.contains(key))) {
                     log.info("\n[LOCATION] - SpecFactory.generateSpecification\n[MSG] - invalid filter param: {}", searchStr);
                     break;
                 }

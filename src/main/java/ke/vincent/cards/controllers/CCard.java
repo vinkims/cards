@@ -60,7 +60,13 @@ public class CCard {
 
         PageDTO pageDTO = new PageDTO(params);
 
-        List<String> allowedFields = new ArrayList<>(Arrays.asList("name", "color", "status.id", "status.name", "dateCreated"));
+        List<String> allowedFields = new ArrayList<>(Arrays.asList("name", "color", "status.id", "status.name", "dateCreated", "user.id"));
+
+        if (!sUserDetails.checkIsAdmin()) {
+            EUser user = sUserDetails.getActiveUserByContact();
+            String searchQuery = String.format(",user.idEQ%s", user.getId());
+            pageDTO.setSearch(pageDTO.getSearch() + searchQuery);    
+        }
 
         Page<ECard> cards = sCard.getPaginatedList(pageDTO, allowedFields);
 
