@@ -6,7 +6,7 @@ import ke.vincent.cards.models.ERole;
 
 public interface IRole {
     
-    Optional<ERole> getById(Integer roleId);
+    Optional<ERole> getByName(String name);
 
-    ERole getById(Integer roleId, Boolean handleException);
+    ERole getByName(String name, Boolean handleException);
 }

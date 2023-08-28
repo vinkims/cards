@@ -19,6 +19,7 @@ import ke.vincent.cards.models.ECard;
 import ke.vincent.cards.models.EStatus;
 import ke.vincent.cards.models.EUser;
 import ke.vincent.cards.repositories.CardDAO;
+import ke.vincent.cards.services.auth.IUserDetails;
 import ke.vincent.cards.services.status.IStatus;
 import ke.vincent.cards.services.user.IUser;
 import ke.vincent.cards.specifications.SpecBuilder;
@@ -28,7 +29,7 @@ import ke.vincent.cards.specifications.SpecFactory;
 public class SCard implements ICard {
 
     @Value(value = "${default.value.status.todo}")
-    private Integer todoStatusId;
+    private String todoStatus;
 
     @Autowired
     private CardDAO cardDAO;
@@ -42,6 +43,16 @@ public class SCard implements ICard {
     @Autowired
     private IUser sUser;
 
+    @Autowired
+    private IUserDetails sUserDetails;
+
+    @Override
+    public Boolean checkIsOwner(Integer cardId) {
+        ECard card = getById(cardId, true);
+        EUser user = sUserDetails.getActiveUserByContact();
+        return user == card.getUser();
+    }
+
     @Override
     public ECard create(CardDTO cardDTO) {
 
@@ -50,7 +61,7 @@ public class SCard implements ICard {
         card.setDateCreated(LocalDateTime.now());
         card.setColor(cardDTO.getColor());
         card.setDescription(cardDTO.getDescription());
-        setStatus(card, todoStatusId);
+        setStatus(card, todoStatus);
         setUser(card, cardDTO.getUserId());
 
         save(card);
@@ -71,6 +82,7 @@ public class SCard implements ICard {
         return card.get();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Page<ECard> getPaginatedList(PageDTO pageDTO, List<String> allowedFields) {
 
@@ -101,19 +113,19 @@ public class SCard implements ICard {
             card.setName(cardDTO.getName());
         }
 
-        if (cardDTO.getColor() != null && !cardDTO.getColor().isBlank()) {
+        if (cardDTO.getColor() != null) {
             card.setColor(cardDTO.getColor());
         } else {
             card.setColor(null);
         }
 
-        if (cardDTO.getDescription() != null && !cardDTO.getDescription().isBlank()) {
+        if (cardDTO.getDescription() != null) {
             card.setDescription(cardDTO.getDescription());
         } else {
             card.setDescription(null);
         }
 
-        setStatus(card, cardDTO.getStatusId());
+        setStatus(card, cardDTO.getStatus());
 
         save(card);
         return card;
@@ -125,9 +137,9 @@ public class SCard implements ICard {
         cardDAO.delete(card);
     }
 
-    private void setStatus(ECard card, Integer statusId) {
-        if (statusId != null) {
-            EStatus status = sStatus.getById(statusId, true);
+    private void setStatus(ECard card, String statusName) {
+        if (statusName != null) {
+            EStatus status = sStatus.getByName(statusName, true);
             card.setStatus(status);
         }
     }

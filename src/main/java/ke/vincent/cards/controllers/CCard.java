@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ke.vincent.cards.dtos.card.CardDTO;
 import ke.vincent.cards.dtos.general.PageDTO;
+import ke.vincent.cards.exceptions.InvalidInputException;
 import ke.vincent.cards.models.ECard;
 import ke.vincent.cards.models.EUser;
 import ke.vincent.cards.responses.SuccessPaginatedResponse;
@@ -78,6 +79,8 @@ public class CCard {
     @GetMapping(path = "/card/{cardId}", produces = "application/json")
     public ResponseEntity<SuccessResponse> getCardById(@PathVariable Integer cardId) {
 
+        checkIfOwner(cardId, "access");
+
         ECard card = sCard.getById(cardId, true);
 
         return ResponseEntity
@@ -87,6 +90,8 @@ public class CCard {
 
     @PatchMapping(path = "/card/{cardId}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SuccessResponse> updateCard(@PathVariable Integer cardId, @RequestBody CardDTO cardDTO) {
+
+        checkIfOwner(cardId, "update");
 
         ECard card = sCard.update(cardId, cardDTO);
 
@@ -98,10 +103,19 @@ public class CCard {
     @DeleteMapping(path = "/card/{cardId}", produces = "application/json")
     public ResponseEntity<SuccessResponse> deleteCard(@PathVariable Integer cardId) {
 
+        checkIfOwner(cardId, "delete");
+        
         sCard.delete(cardId);
 
         return ResponseEntity
             .ok()
             .body(new SuccessResponse(200, "successfully deleted card", cardId));
+    }
+
+    private void checkIfOwner(Integer cardId, String action) {
+        if (!sUserDetails.checkIsAdmin() && !sCard.checkIsOwner(cardId)) {
+            String actionStr = String.format("Sorry you cannot %s a card that is not yours", action);
+            throw new InvalidInputException(actionStr, "cardId");
+        }
     }
 }

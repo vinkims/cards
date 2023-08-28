@@ -16,15 +16,15 @@ public class SRole implements IRole {
     private RoleDAO roleDAO;
 
     @Override
-    public Optional<ERole> getById(Integer roleId) {
-        return roleDAO.findById(roleId);
+    public Optional<ERole> getByName(String name) {
+        return roleDAO.findByName(name);
     }
 
     @Override
-    public ERole getById(Integer roleId, Boolean handleException) {
-        Optional<ERole> role = getById(roleId);
+    public ERole getByName(String name, Boolean handleException) {
+        Optional<ERole> role = getByName(name);
         if (!role.isPresent() && handleException) {
-            throw new NotFoundException("role with specified id not found", "roleId");
+            throw new NotFoundException("role with specified name not found", "role");
         }
         return role.get();
     }

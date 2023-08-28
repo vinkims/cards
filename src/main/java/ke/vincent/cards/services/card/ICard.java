@@ -11,6 +11,8 @@ import ke.vincent.cards.models.ECard;
 
 public interface ICard {
     
+    Boolean checkIsOwner(Integer cardId);
+    
     ECard create(CardDTO cardDTO);
 
     Optional<ECard> getById(Integer cardId);

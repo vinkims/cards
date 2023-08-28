@@ -25,8 +25,8 @@ import ke.vincent.cards.specifications.SpecFactory;
 @Service
 public class SUser implements IUser {
 
-    @Value(value = "${default.value.role.member-id}")
-    private Integer memberRoleId;
+    @Value(value = "${default.value.role.member}")
+    private String memberRole;
 
     @Autowired
     private UserDAO userDAO;
@@ -51,8 +51,9 @@ public class SUser implements IUser {
         user.setDateCreated(LocalDateTime.now());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
-        Integer roleId = userDTO.getRoleId() == null ? memberRoleId : userDTO.getRoleId();
-        setRole(user, roleId);
+
+        String roleName = userDTO.getRole() == null ? memberRole : userDTO.getRole();
+        setRole(user, roleName);
 
         save(user);
         return user;
@@ -77,6 +78,7 @@ public class SUser implements IUser {
         return user.get();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Page<EUser> getPaginatedList(PageDTO pageDTO, List<String> allowedFields) {
 
@@ -99,8 +101,8 @@ public class SUser implements IUser {
         userDAO.save(user);
     }
 
-    public void setRole(EUser user, Integer roleId) {
-        ERole role = sRole.getById(roleId, true);
+    public void setRole(EUser user, String roleName) {
+        ERole role = sRole.getByName(roleName, true);
         user.setRole(role);
     }
     

@@ -20,8 +20,8 @@ import ke.vincent.cards.services.user.IUser;
 @Service
 public class SUserDetails implements IUserDetails {
 
-    @Value(value = "${default.value.role.admin-id}")
-    private Integer adminRoleId;
+    @Value(value = "${default.value.role.admin}")
+    private String adminRole;
 
     @Autowired
     private IUser sUser;
@@ -45,8 +45,8 @@ public class SUserDetails implements IUserDetails {
     @Override
     public Boolean checkIsAdmin() {
         EUser activeUser = getActiveUserByContact();
-        Integer roleId = activeUser.getRole().getId();
-        return roleId == adminRoleId;
+        String roleName = activeUser.getRole().getName();
+        return roleName.equals(adminRole);
     }
 
     @Override

@@ -5,8 +5,8 @@ import java.util.Optional;
 import ke.vincent.cards.models.EStatus;
 
 public interface IStatus {
-    
-    Optional<EStatus> getById(Integer statusId);
 
-    EStatus getById(Integer statusId, Boolean handleException);
+    Optional<EStatus> getByName(String name);
+
+    EStatus getByName(String name, Boolean handleException);
 }

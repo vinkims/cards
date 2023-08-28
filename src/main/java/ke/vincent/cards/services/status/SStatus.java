@@ -16,15 +16,15 @@ public class SStatus implements IStatus {
     private StatusDAO statusDAO;
 
     @Override
-    public Optional<EStatus> getById(Integer statusId) {
-        return statusDAO.findById(statusId);
+    public Optional<EStatus> getByName(String name) {
+        return statusDAO.findByName(name);
     }
 
     @Override
-    public EStatus getById(Integer statusId, Boolean handleException) {
-        Optional<EStatus> status = getById(statusId);
+    public EStatus getByName(String name, Boolean handleException) {
+        Optional<EStatus> status = getByName(name);
         if (!status.isPresent() && handleException) {
-            throw new NotFoundException("status with specified id not found", "statusId");
+            throw new NotFoundException("status with specified name not found", "status");
         }
         return status.get();
     }
