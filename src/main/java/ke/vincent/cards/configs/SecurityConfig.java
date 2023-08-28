@@ -27,6 +27,7 @@ public class SecurityConfig {
             .authorizeRequests()
             .antMatchers("/auth/signin").permitAll()
             .antMatchers("/user").permitAll()
+            .antMatchers("/v2/api-docs", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
             .anyRequest().authenticated();
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
