@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModelProperty.AccessMode;
 import ke.vincent.cards.annotations.IsEmailValid;
 import ke.vincent.cards.models.EUser;
 import lombok.Data;
@@ -15,12 +17,14 @@ import lombok.NoArgsConstructor;
 @JsonInclude(value = Include.NON_NULL)
 public class UserDTO {
     
+    @ApiModelProperty(accessMode = AccessMode.READ_ONLY, hidden = true)
     private Integer id;
 
     private String firstName;
 
     private String lastName;
 
+    @ApiModelProperty(accessMode = AccessMode.READ_ONLY, hidden = true)
     private LocalDateTime dateCreated;
 
     @IsEmailValid
@@ -29,8 +33,6 @@ public class UserDTO {
     private String password;
 
     private String role;
-
-    private Integer roleId;
 
     public UserDTO(EUser user) {
         setId(user.getId());
