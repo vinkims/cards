@@ -65,6 +65,15 @@ public class SUser implements IUser {
     }
 
     @Override
+    public EUser getByEmail(String email, Boolean handleException) {
+        Optional<EUser> user = getByEmail(email);
+        if (!user.isPresent() && handleException) {
+            throw new NotFoundException("user with specified email not found", "userEmail");
+        }
+        return user.get();
+    }
+
+    @Override
     public Optional<EUser> getById(Integer userId) {
         return userDAO.findById(userId);
     }

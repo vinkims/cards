@@ -17,6 +17,8 @@ public interface IUser {
 
     Optional<EUser> getByEmail(String email);
 
+    EUser getByEmail(String email, Boolean handleException);
+
     Optional<EUser> getById(Integer userId);
 
     EUser getById(Integer userId, Boolean handleException);

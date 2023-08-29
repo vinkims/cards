@@ -7,6 +7,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,5 +32,15 @@ public class CUser {
         return ResponseEntity
             .created(new URI("/user/" + user.getId()))
             .body(new SuccessResponse(201, "successfully created user", new UserDTO(user)));
+    }
+
+    @GetMapping(path = "/user/{email}", produces = "application/json")
+    public ResponseEntity<SuccessResponse> getUser(@PathVariable String email) {
+
+        EUser user = sUser.getByEmail(email, true);
+
+        return ResponseEntity
+            .ok()
+            .body(new SuccessResponse(200, "successfully fetched user", new UserDTO(user)));
     }
 }
